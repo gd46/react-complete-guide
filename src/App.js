@@ -3,33 +3,60 @@ import logo from './logo.svg';
 import './App.css';
 
 import Person from './Person/Person';
+import Validation from './Validation/Validation';
+import Char from './Char/Char';
 
 class App extends Component {
   state = {
     persons: [
-      { name: 'Max', age: 23},
-      { name: 'Bill', age: 45},
-      { name: 'Joe', age: 34}
-    ]
+      { id: '1', name: 'Max', age: 23},
+      { id: '2', name: 'Bill', age: 45},
+      { id: '3', name: 'Joe', age: 34}
+    ],
+    showPersons: false,
+    userInput: ''
   }
 
-  switchNameHandler = (name) => {
+  nameChangedHandler = (event, personId) => {
+    const personIndex = this.state.persons.findIndex(person => {
+      return person.id === personId;
+    });
+
+    const person = {
+      ...this.state.persons[personIndex]
+    };
+
+    person.name = event.target.value;
+
+    const persons = [...this.state.persons];
+    persons[personIndex] = person;
+
+    this.setState({persons});
+  }
+
+  deletePersonHandler = (personIndex) => {
+    const persons = [...this.state.persons]; // Make a copy to not modify existing state
+    persons.splice(personIndex, 1);
+    this.setState({persons});
+  }
+
+  togglePersonsHandler = () => {
+    const doesShow = this.state.showPersons;
+    this.setState({showPersons: !doesShow});
+  }
+
+  inputChangeHandler = (userInput) => {
     this.setState({
-      persons: [
-        { name: 'Max', age: 23},
-        { name: name, age: 45},
-        { name: 'Joe', age: 34}
-      ]
+      userInput: userInput.target.value
     });
   }
 
-  nameChangedHandler = (event) => {
+  deleteCharHandler = (index) => {
+    const text = this.state.userInput.split('');
+    text.splice(index, 1);
+    const updatedText = text.join('');
     this.setState({
-      persons: [
-        { name: 'Max', age: 23},
-        { name: event.target.value, age: 45},
-        { name: 'Joe', age: 34}
-      ]
+      userInput: updatedText
     });
   }
 
@@ -42,30 +69,55 @@ class App extends Component {
       cursor: 'pointer'
     }
 
+    let persons = null;
+
+    const charList = this.state.userInput.split('').map((char, index) => {
+      return <Char 
+        character={char}
+        key={index}
+        clicked={() => this.deleteCharHandler(index)} />
+    });
+
+    if (this.state.showPersons) {
+      persons = (
+          <div>
+            {
+              this.state.persons.map((person, index) => {
+                return (
+                  <Person 
+                    click={() => this.deletePersonHandler(index)}
+                    name={person.name}
+                    age={person.age}
+                    key={person.id}
+                    changed={(event) => this.nameChangedHandler(event, person.id)}
+                  />
+                )
+              })
+            }
+          </div>
+      );
+    }
+
     return (
       <div className="App">
         <h1>React Complete Guide</h1>
+        <section className="lessonOne">
         <button 
           style={style}
-          onClick={() => this.switchNameHandler('Maximillian')}
+          onClick={this.togglePersonsHandler}
+          // onClick={() => this.switchNameHandler('Maximillian')}
           >Switch Name</button>
-
-        <Person
-          name={this.state.persons[0].name}
-          age={this.state.persons[0].age}
-        ></Person>
-
-        <Person
-          name={this.state.persons[1].name}
-          age={this.state.persons[1].age}
-          click={this.switchNameHandler.bind(this, 'Joel')}
-          changed={this.nameChangedHandler}
-        ></Person>
-
-        <Person
-          name={this.state.persons[2].name}
-          age={this.state.persons[2].age}
-        ></Person>
+        {persons}
+        </section>
+        <section className="lessonTwo">
+          <input 
+            onChange={this.inputChangeHandler}
+            value={this.state.userInput}
+          />
+          <p>{this.state.userInput}</p>
+          <Validation inputLength={this.state.userInput.length} />
+          {charList}
+        </section>
       </div>
     );
   }
