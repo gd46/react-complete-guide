@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import Radium from 'radium';
+import Radium, { StyleRoot  } from 'radium';
 
 
 import Person from './Person/Person';
@@ -122,27 +122,29 @@ class App extends Component {
     }
 
     return (
-      <div className="App">
-        <h1>React Complete Guide</h1>
-        <p className={classes.join(' ')}>This is really working!</p>
-        <section className="lessonOne">
-        <button 
-          style={style}
-          onClick={this.togglePersonsHandler}
-          // onClick={() => this.switchNameHandler('Maximillian')}
-          >Switch Name</button>
-        {persons}
-        </section>
-        <section className="lessonTwo">
-          <input 
-            onChange={this.inputChangeHandler}
-            value={this.state.userInput}
-          />
-          <p>{this.state.userInput}</p>
-          <Validation inputLength={this.state.userInput.length} />
-          {charList}
-        </section>
-      </div>
+      <StyleRoot>
+        <div className="App">
+            <h1>React Complete Guide</h1>
+            <p className={classes.join(' ')}>This is really working!</p>
+            <section className="lessonOne">
+            <button 
+              style={style}
+              onClick={this.togglePersonsHandler}
+              // onClick={() => this.switchNameHandler('Maximillian')}
+              >Switch Name</button>
+            {persons}
+            </section>
+            <section className="lessonTwo">
+              <input 
+                onChange={this.inputChangeHandler}
+                value={this.state.userInput}
+              />
+              <p>{this.state.userInput}</p>
+              <Validation inputLength={this.state.userInput.length} />
+              {charList}
+            </section>
+          </div>
+      </StyleRoot>
     );
   }
 }
