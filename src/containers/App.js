@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import logo from '../assets/logo.svg';
 import './App.css';
 import Radium, { StyleRoot  } from 'radium';
 
 
-import Person from './Person/Person';
-import Validation from './Validation/Validation';
-import Char from './Char/Char';
-import ErrorBoundary from './ErrorBoundary/ErrorBoundary';
+import Person from '../components/Persons/Person/Person';
+import Validation from '../components/Validation/Validation';
+import Char from '../components/Char/Char';
+import ErrorBoundary from '../components/ErrorBoundary/ErrorBoundary';
 
 class App extends Component {
   state = {
