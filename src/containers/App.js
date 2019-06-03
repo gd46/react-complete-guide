@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import logo from '../assets/logo.svg';
 import './App.css';
-import Radium, { StyleRoot  } from 'radium';
 
-
-import Person from '../components/Persons/Person/Person';
+import Cockpit from '../components/Cockpit/Cockpit';
+import Persons from '../components/Persons/Persons';
 import Validation from '../components/Validation/Validation';
 import Char from '../components/Char/Char';
-import ErrorBoundary from '../components/ErrorBoundary/ErrorBoundary';
 
 class App extends Component {
   state = {
@@ -64,20 +62,6 @@ class App extends Component {
   }
 
   render() {
-    const style = {
-      backgroundColor: 'green',
-      color: 'white',
-      font: 'inherit',
-      border: '1px solid blue',
-      padding: '8px',
-      marginBottom: '15px',
-      cursor: 'pointer',
-      ':hover': {
-        backgroundColor: 'lightgreen',
-        color: 'black'
-      }
-    }
-
     let persons = null;
 
     const charList = this.state.userInput.split('').map((char, index) => {
@@ -88,54 +72,19 @@ class App extends Component {
     });
 
     if (this.state.showPersons) {
-      persons = (
-          <div>
-            {
-              this.state.persons.map((person, index) => {
-                return (
-                  <ErrorBoundary key={person.id}>
-                    <Person 
-                      click={() => this.deletePersonHandler(index)}
-                      name={person.name}
-                      age={person.age}
-                      changed={(event) => this.nameChangedHandler(event, person.id)}
-                    />
-                  </ErrorBoundary>
-                )
-              })
-            }
-          </div>
-      );
-
-      style.backgroundColor = 'red';
-      style[':hover'] = {
-        backgroundColor: 'lightred',
-        color: 'black'
-      }
-    }
-
-    const classes = [];
-
-    if (this.state.persons.length <= 2) {
-      classes.push('red');
-    }
-    if(this.state.persons.length <= 1) {
-      classes.push('bold');
+      persons = <Persons 
+              persons={this.state.persons}
+              clicked={this.deletePersonHandler}
+              changed={this.nameChangedHandler}/>
     }
 
     return (
-      <StyleRoot>
         <div className="App">
-            <h1>React Complete Guide</h1>
-            <p className={classes.join(' ')}>This is really working!</p>
-            <section className="lessonOne">
-            <button 
-              style={style}
-              onClick={this.togglePersonsHandler}
-              // onClick={() => this.switchNameHandler('Maximillian')}
-              >Switch Name</button>
+            <Cockpit 
+              showPersons={this.state.showPersons}
+              persons={this.state.persons}
+              clicked={this.togglePersonsHandler}/>
             {persons}
-            </section>
             <section className="lessonTwo">
               <input 
                 onChange={this.inputChangeHandler}
@@ -146,9 +95,8 @@ class App extends Component {
               {charList}
             </section>
           </div>
-      </StyleRoot>
     );
   }
 }
 
-export default Radium(App);
+export default App;
